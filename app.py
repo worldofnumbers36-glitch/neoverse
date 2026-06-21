@@ -679,7 +679,7 @@ def login():
         <button class="btn" type="submit">Log In</button>
       </form>
       <p class="small">New here? <a href="{{ url_for('register') }}">Create an account</a></p>
-      <p class="small">Demo admin: <b>admin</b> / <b>admin123</b></p>
+      <p class="small"><b></b> / <b></b></p>
     </div>
     """
     return render_page("Login", body)
