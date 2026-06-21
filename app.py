@@ -495,6 +495,56 @@ input:focus,textarea:focus{outline:none; border-color:var(--neon)}
 table{width:100%; border-collapse:collapse; font-size:14px}
 th,td{text-align:left; padding:8px; border-bottom:1px solid #14204a}
 .small{color:var(--text-dim); font-size:12px}
+
+/* ---- Mobile nav (hamburger via checkbox hack, no JS needed) ---- */
+.nav-toggle{display:none}
+.nav-burger{display:none; cursor:pointer; font-size:26px; line-height:1; color:var(--neon); padding:4px 6px}
+.nav-links{display:flex; align-items:center; flex-wrap:wrap}
+.nav-links a{margin-left:18px}
+
+/* ---- Generic responsive helpers used by some forms ---- */
+.responsive-row{display:flex; gap:10px; align-items:flex-end; flex-wrap:wrap}
+.responsive-row > div{flex:1; min-width:140px}
+.scratch-grid{grid-template-columns:repeat(4,1fr)}
+
+/* ================== MOBILE LAYOUT ================== */
+@media (max-width:768px){
+  .nav{padding:12px 16px; flex-wrap:wrap}
+  .brand{font-size:19px}
+  .nav-burger{display:block}
+  .nav-links{
+    display:none; flex-direction:column; align-items:stretch;
+    width:100%; margin-top:10px; gap:0;
+  }
+  .nav-toggle:checked ~ .nav-links{display:flex}
+  .nav-links a{
+    margin-left:0; padding:10px 4px; width:100%;
+    border-bottom:1px solid #14204a; font-size:15px;
+  }
+}
+
+@media (max-width:600px){
+  .wrap{padding:18px 12px}
+  h1{font-size:21px}
+  h2{font-size:18px}
+  .card{padding:16px; border-radius:12px}
+  .grid{grid-template-columns:1fr; gap:12px}
+  .reward-grid{grid-template-columns:repeat(3,1fr); gap:6px}
+  .reward-slot{font-size:11px; padding:2px}
+  .scratch-grid{grid-template-columns:repeat(3,1fr)}
+  .game-iframe-wrap{height:380px}
+  .currency-row{flex-wrap:wrap; gap:4px}
+  table{display:block; overflow-x:auto; -webkit-overflow-scrolling:touch; white-space:nowrap}
+  input,textarea,select{font-size:16px} /* prevents iOS auto-zoom on focus */
+  .btn{width:100%; text-align:center; padding:12px 16px}
+  .responsive-row{flex-direction:column; align-items:stretch}
+  .responsive-row > div{min-width:0}
+}
+
+@media (max-width:400px){
+  .reward-grid{grid-template-columns:repeat(2,1fr)}
+  .scratch-grid{grid-template-columns:repeat(2,1fr)}
+}
 """
 
 BASE_TEMPLATE = """
@@ -509,7 +559,9 @@ BASE_TEMPLATE = """
 <body>
   <div class="nav">
     <a href="{{ url_for('index') }}" class="brand">NEOVERSE</a>
-    <div>
+    <input type="checkbox" id="nav-toggle" class="nav-toggle">
+    <label for="nav-toggle" class="nav-burger">&#9776;</label>
+    <div class="nav-links">
       {% if user %}
         <a href="{{ url_for('index') }}">Dashboard</a>
         <a href="{{ url_for('games_list') }}">Games</a>
@@ -943,9 +995,9 @@ def games_list():
     body = """
     <h1>Game Marketplace</h1>
     <div class="card">
-      <form method="get" style="display:flex;gap:10px;align-items:flex-end">
-        <div style="flex:1"><label>Search</label><input name="q" value="{{ request.args.get('q','') }}"></div>
-        <div style="flex:1">
+      <form method="get" class="responsive-row">
+        <div><label>Search</label><input name="q" value="{{ request.args.get('q','') }}"></div>
+        <div>
           <label>Category</label>
           <select name="category">
             <option value="">All</option>
@@ -1205,7 +1257,7 @@ def lottery_batch(batch_id):
     body = """
     <h1>Scratch Card Batch #{{ batch['id'] }}</h1>
     <p class="small">Currency: {{ batch['currency'] }} &middot; Paid: {{ batch['cost_paid'] }} &middot; Bought {{ batch['created_at'][:19] }}</p>
-    <div class="reward-grid" style="grid-template-columns:repeat(4,1fr)">
+    <div class="reward-grid scratch-grid">
       {% for c in cards %}
         {% if c['revealed'] %}
           <div class="reward-slot {% if c['value'] < 0 %}penalty{% endif %} done">
