@@ -3354,4 +3354,5 @@ seed_admin_and_demo()
 seed_assets()
 seed_demo_social_users()
 print("NeoVerse v2.0 running at http://127.0.0.1:5000")
-app.run(debug=True, host="127.0.0.1", port=5000)
+if __name__ == "__main__":
+    app.run(debug=True)
