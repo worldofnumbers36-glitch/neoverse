@@ -3349,12 +3349,9 @@ def forbidden(e):
 def not_found(e):
     return render_page("Not Found",
         "<div class='card'><h2>404 — Not Found</h2><p>That page doesn't exist.</p></div>"), 404
-
-
-if __name__ == "__main__":
-    init_db()
-    seed_admin_and_demo()
-    seed_assets()
-    seed_demo_social_users()
-    print("NeoVerse v2.0 running at http://127.0.0.1:5000")
-    app.run(debug=True, host="127.0.0.1", port=5000)
+init_db()
+seed_admin_and_demo()
+seed_assets()
+seed_demo_social_users()
+print("NeoVerse v2.0 running at http://127.0.0.1:5000")
+app.run(debug=True, host="127.0.0.1", port=5000)
